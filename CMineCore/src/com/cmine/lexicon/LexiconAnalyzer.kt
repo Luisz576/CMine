@@ -1,3 +1,13 @@
 package com.cmine.lexicon
 
-class LexiconAnalyzer
+import com.cmine.lexicon.exception.LexiconException
+import com.cmine.token.Token
+import com.cmine.util.Tuple
+
+class LexiconAnalyzer{
+    fun analyze(fileContent: StringBuffer): Tuple<LexiconException?, List<Token>> {
+        val tokens: List<Token> = ArrayList();
+        // TODO: Lista ou arvore?
+        return Tuple(null, tokens);
+    }
+}

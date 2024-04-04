@@ -16,11 +16,4 @@ abstract class Token(private val tokenName: String, private val expression: Stri
     fun column(): Int {
         return this.column
     }
-
-    companion object {
-        fun tokenFromExpression(expression: String, line: Int, column: Int): Token?{
-            // TODO:
-            return null;
-        }
-    }
 }
