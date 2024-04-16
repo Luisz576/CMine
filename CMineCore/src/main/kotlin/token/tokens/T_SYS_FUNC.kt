@@ -5,14 +5,14 @@ import com.cmine.token.Token
 class T_SYS_FUNC(expression: String, line: Int, column: Int)
     : Token("T_SYS_FUNC", expression, line, column){
     companion object{
-        enum class SYS_FUNC(val f){
+        enum class SYS_FUNC(val f: String){
             SHOW_SCREEN("show_screen"),
             KILL_APP("kill_app")
         }
 
         fun validate(expression: String): Boolean{
             val ex = expression.lowercase()
-            for(sysFunc in SYS_FUNC){
+            for(sysFunc in SYS_FUNC.entries){
                 if(sysFunc.f == ex){
                     return true
                 }

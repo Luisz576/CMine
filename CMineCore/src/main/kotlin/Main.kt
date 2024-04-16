@@ -6,6 +6,7 @@ object CMine {
     @JvmStatic
     fun main(args: Array<String>) {
         println("CMine")
-        LexiconAnalyzer().analyzeFromFile("teste.txt")
+        val tokens = LexiconAnalyzer().analyzeFromFile("teste.txt")
+        println(tokens.size)
     }
 }
