@@ -83,26 +83,31 @@ class LexiconAnalyzer{
                 if(expression.readingType() == ReadingType.STRING){
                     expression.append(c)
                 }else{
-                    // TODO:
-                }
-            }else if(SymbolTable.isColon(c)){
-                if(expression.readingType() == ReadingType.STRING){
+                    if(expression.alreadyReadSomething()){
+                        identifyToken()
+                    }
                     expression.append(c)
-                }else{
+                    identifyToken()
+                }
+            }else if(SymbolTable.isColon(c)) {
+                if (expression.readingType() == ReadingType.STRING) {
+                    expression.append(c)
+                } else {
                     // TODO:
                 }
             }else if(SymbolTable.isOperator(c)){
-                if(expression.readingType() == ReadingType.STRING){
+                if(expression.readingType() == ReadingType.STRING
+                    || expression.readingType() == ReadingType.OPERATOR){
                     expression.append(c)
                 }else{
-                    // TODO:
+                    if(expression.alreadyReadSomething()) {
+                        identifyToken()
+                    }
+                    expression.startReadingAppending(currentLine, currentColumn, c)
+                    expression.setReadingType(ReadingType.OPERATOR)
                 }
             }else if(SymbolTable.isDigit(c)){
-                if(expression.readingType() == ReadingType.STRING){
-                    expression.append(c)
-                }else{
-                    // TODO:
-                }
+                expression.append(c)
             }else if(SymbolTable.isLetter(c)){
                 expression.append(c)
             }else if(SymbolTable.isBackslash(c)){
@@ -116,6 +121,7 @@ class LexiconAnalyzer{
             if(expression.readingType() == ReadingType.STRING){
                 throw TextNotClosedException(expression.build(), expression.startLine(), expression.startColumn())
             }
+            identifyToken()
         }
 
         return ArrayList(tokensAux)

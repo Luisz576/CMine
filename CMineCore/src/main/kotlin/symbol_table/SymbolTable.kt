@@ -10,8 +10,21 @@ class SymbolTable {
             return c == ' ' || c == '\t'
         }
 
+        fun canStartADigit(c: Char): Boolean{
+            return c == '-'
+        }
+
+        fun isPartingInsideADigit(c: Char): Boolean{
+            return c == '.'
+        }
+
+//        TODO: fun isSpecial(c: Char): Boolean{
+//            return c == '.' || c == '!' || c == '?' || ...
+//        }
+
         fun isOperator(c: Char): Boolean{
-            return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '='
+            return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '=' || c == '!' || c == '|' || c == '&' || c == '<' || c == '>'
+            // TODO: separar em logic operator e math operator?
         }
 
         fun isColon(c: Char): Boolean{
