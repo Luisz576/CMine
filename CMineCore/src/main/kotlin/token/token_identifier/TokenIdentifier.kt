@@ -30,6 +30,11 @@ class TokenIdentifier {
             else if(T_CV_TYPE.validate(expression)) return T_CV_TYPE(expression, line, column)
             else if(T_VAL_BOOL.validate(expression)) return T_SYS_FUNC(expression, line, column)
 
+            else if(T_REP_BREAK.validate(expression)) return T_REP_BREAK(expression, line, column)
+            else if(T_REP_CONT.validate(expression)) return T_REP_CONT(expression, line, column)
+            else if(T_REP_FOR.validate(expression)) return T_REP_FOR(expression, line, column)
+            else if(T_REP_WHILE.validate(expression)) return T_REP_WHILE(expression, line, column)
+
             // TODO:
 
             throw InvalidTokenException(expression, line, column)

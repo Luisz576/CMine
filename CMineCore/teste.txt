@@ -1,1 +1,4 @@
 ifsuldeminas
+muz coin COIN cOIN
+text
+Text

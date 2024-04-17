@@ -2,11 +2,13 @@ package com.cmine.lexicon
 
 import com.cmine.lexicon.exception.InvalidFileException
 import com.cmine.lexicon.expression.ExpressionBuilder
+import com.cmine.lexicon.expression.ReadingType
 import com.cmine.symbol_table.SymbolTable
 import com.cmine.symbol_table.exception.InvalidSymbolException
 import com.cmine.token.Token
 import com.cmine.token.exception.InvalidTokenException
 import com.cmine.token.token_identifier.TokenIdentifier
+import token.exception.TextNotClosedException
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -46,9 +48,10 @@ class LexiconAnalyzer{
         while ((buffer.read().also { cI = it }) != -1) {
             currentColumn++
             c = cI.toChar()
+            println("line $currentLine / column $currentColumn : $c")
 
-            if(expression.startLineAndColumnAreNotSetted()){
-                expression.setStartLineAndColumn(currentLine, currentColumn)
+            if(!expression.isReading()){
+                expression.startReading(currentLine, currentColumn)
             }
 
             if(SymbolTable.isBreakLine(c)){
@@ -56,31 +59,63 @@ class LexiconAnalyzer{
                 currentLine++
                 currentColumn = 0
             }else if(SymbolTable.isWhitespaceOrTab(c)){
-                if(expression.isReadingString()){
+                if(expression.alreadyReadSomething()) {
+                    if (expression.readingType() == ReadingType.STRING) {
+                        expression.append(c)
+                    } else {
+                        identifyToken()
+                    }
+                }
+            }else if(SymbolTable.isStringIdentifier(c)){
+                if(expression.readingType() == ReadingType.STRING){
+                    if(SymbolTable.isBackslash(expression.lastCharacter())){
+                        expression.append(c)
+                        identifyToken()
+                    }else{
+                        expression.append(c)
+                    }
+                }else{
+                    identifyToken()
+                    expression.startReadingAppending(currentLine, currentColumn, c)
+                    expression.setReadingType(ReadingType.STRING)
+                }
+            }else if(SymbolTable.isBrackets(c)){
+                if(expression.readingType() == ReadingType.STRING){
                     expression.append(c)
                 }else{
                     // TODO:
-                    identifyToken()
                 }
-            }else if(SymbolTable.isBrackets(c)){
-                // TODO:
-            }else if(SymbolTable.isStringIdentifier(c)){
-                // TODO:
             }else if(SymbolTable.isColon(c)){
-                // TODO:
+                if(expression.readingType() == ReadingType.STRING){
+                    expression.append(c)
+                }else{
+                    // TODO:
+                }
             }else if(SymbolTable.isOperator(c)){
-                // TODO:
+                if(expression.readingType() == ReadingType.STRING){
+                    expression.append(c)
+                }else{
+                    // TODO:
+                }
             }else if(SymbolTable.isDigit(c)){
-                // TODO:
+                if(expression.readingType() == ReadingType.STRING){
+                    expression.append(c)
+                }else{
+                    // TODO:
+                }
             }else if(SymbolTable.isLetter(c)){
-                // TODO:
+                expression.append(c)
+            }else if(SymbolTable.isBackslash(c)){
+                expression.append(c)
             }else{
                 throw InvalidSymbolException(c, currentLine, currentColumn)
             }
         }
 
-        if(expression.size() > 0){
-            identifyToken()
+        if(expression.alreadyReadSomething()){
+            if(expression.readingType() == ReadingType.STRING){
+                throw TextNotClosedException(expression.build(), expression.startLine(), expression.startColumn())
+            }
         }
 
         return ArrayList(tokensAux)
@@ -88,11 +123,13 @@ class LexiconAnalyzer{
 
     @Throws(InvalidTokenException::class)
     private fun identifyToken(){
-        val a = expression.build()
-        println("A: '$a'") // TODO:
-        tokensAux.add(
-            TokenIdentifier.identify(a, expression.startLine(), expression.startColumn())
-        )
+        if(expression.alreadyReadSomething()) {
+            val ex = expression.build()
+            println("Expressão '${ex}'")
+            tokensAux.add(
+                TokenIdentifier.identify(ex, expression.startLine(), expression.startColumn())
+            )
+        }
         expression.reset()
     }
 }

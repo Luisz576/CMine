@@ -19,7 +19,7 @@ class SymbolTable {
         }
 
         fun isLetter(c: Char): Boolean{
-            return c in 'a'..'z'
+            return c in 'a'..'z' || c in 'A'..'Z'
         }
 
         fun isDigit(c: Char): Boolean{
@@ -32,6 +32,10 @@ class SymbolTable {
 
         fun isStringIdentifier(c: Char): Boolean{
             return c == '"'
+        }
+
+        fun isBackslash(c: Char): Boolean{
+            return c == '\\'
         }
     }
 }

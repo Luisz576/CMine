@@ -1,17 +1,17 @@
 package com.cmine.lexicon.expression
 
 class ExpressionBuilder {
-    private val expression = StringBuilder()
+    private val expression = StringBuilder("")
     fun size(): Int{
         return expression.length
     }
 
-    private var isReadingString = false
-    fun isReadingString(): Boolean{
-        return isReadingString
+    private var readingType = ReadingType.NOTHING
+    fun readingType(): ReadingType{
+        return this.readingType
     }
-    fun setReadingString(isReadingString: Boolean){
-        this.isReadingString = isReadingString
+    fun setReadingType(type: ReadingType){
+        this.readingType = type
     }
 
     private var startColumn = -1
@@ -22,17 +22,28 @@ class ExpressionBuilder {
     fun startLine(): Int{
         return startLine
     }
-    fun startLineAndColumnAreNotSetted(): Boolean{
-        return startColumn < 0 || startLine < -1
+    fun alreadyReadSomething(): Boolean{
+        return this.size() > 0
     }
-    fun setStartLineAndColumn(startLine: Int, startColumn: Int){
+    fun lastCharacter(): Char{
+        return this.expression.last()
+    }
+    fun isReading(): Boolean{
+        return this.readingType != ReadingType.NOTHING
+    }
+    fun startReading(startLine: Int, startColumn: Int){
         this.startLine = startLine
         this.startColumn = startColumn
+        this.readingType = ReadingType.SOMETHING
+    }
+    fun startReadingAppending(startLine: Int, startColumn: Int, c: Char){
+        this.startReading(startLine, startColumn)
+        this.append(c)
     }
 
     fun reset(){
         expression.clear()
-        isReadingString = false
+        readingType = ReadingType.NOTHING
         startColumn = -1
         startLine = -1
     }
