@@ -10,7 +10,8 @@ class T_OP_MATH(expression: String, line: Int, column: Int)
             SUBTRACTION("-"),
             MULTIPLICATION("*"),
             DIVISION("/"),
-            EXPONENT("^")
+            EXPONENT("^"),
+            MOD("%")
         }
 
         fun validate(expression: String): Boolean{

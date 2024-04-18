@@ -1,5 +1,26 @@
-ifsuldeminas
-muz coin COIN cOIN
-text
-Text
-+ / + || && * [ ] [] ( ) () { } {}
+completed condicao = false;
+completed #FALSO=false;,,
+DELTA PATH
+check (velocity > 50 && !condicao || ola <= 44.3) {
+    play{} crash(text e){}
+}Checked{
+
+}
+
+quest $get1(){
+    loot 1
+}
+
+quest $get_2(){
+    loot 2
+}
+
+task (coin i=0;i<5;i=i+1) {
+    velocity=velocity*2;
+}
+%
+
+SHOW_SCREEN();
+    journey(enemiesToSpawn>0){
+    !spawnEnemy();
+}

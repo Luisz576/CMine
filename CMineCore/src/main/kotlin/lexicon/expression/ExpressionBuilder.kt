@@ -36,10 +36,6 @@ class ExpressionBuilder {
         this.startColumn = startColumn
         this.readingType = ReadingType.SOMETHING
     }
-    fun startReadingAppending(startLine: Int, startColumn: Int, c: Char){
-        this.startReading(startLine, startColumn)
-        this.append(c)
-    }
 
     fun reset(){
         expression.clear()

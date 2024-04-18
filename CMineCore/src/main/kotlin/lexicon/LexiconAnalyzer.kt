@@ -48,70 +48,97 @@ class LexiconAnalyzer{
         while ((buffer.read().also { cI = it }) != -1) {
             currentColumn++
             c = cI.toChar()
-            println("line $currentLine / column $currentColumn : $c")
 
             if(!expression.isReading()){
                 expression.startReading(currentLine, currentColumn)
             }
 
             if(SymbolTable.isBreakLine(c)){
-                identifyToken()
+                identifyToken(false)
                 currentLine++
                 currentColumn = 0
+            }else if(SymbolTable.isBreakCommand(c)){
+                identifyToken(true)
+                expression.append(c)
+                identifyToken(false)
             }else if(SymbolTable.isWhitespaceOrTab(c)){
-                if(expression.alreadyReadSomething()) {
-                    if (expression.readingType() == ReadingType.STRING) {
-                        expression.append(c)
-                    } else {
-                        identifyToken()
-                    }
+                if (expression.readingType() == ReadingType.STRING) {
+                    expression.append(c)
+                } else {
+                    identifyToken(false)
                 }
             }else if(SymbolTable.isStringIdentifier(c)){
                 if(expression.readingType() == ReadingType.STRING){
                     if(SymbolTable.isBackslash(expression.lastCharacter())){
                         expression.append(c)
-                        identifyToken()
+                        identifyToken(false)
                     }else{
                         expression.append(c)
                     }
                 }else{
-                    identifyToken()
-                    expression.startReadingAppending(currentLine, currentColumn, c)
+                    identifyToken(true)
+                    expression.append(c)
                     expression.setReadingType(ReadingType.STRING)
                 }
-            }else if(SymbolTable.isBrackets(c)){
+            }else if(SymbolTable.isBrackets(c)
+                    || SymbolTable.isComma(c)){
                 if(expression.readingType() == ReadingType.STRING){
                     expression.append(c)
                 }else{
-                    if(expression.alreadyReadSomething()){
-                        identifyToken()
-                    }
+                    identifyToken(true)
                     expression.append(c)
-                    identifyToken()
+                    identifyToken(false)
+                }
+            }else if(SymbolTable.isDot(c)) {
+                if (expression.readingType() == ReadingType.STRING
+                    || expression.readingType() == ReadingType.DIGIT) {
+                    expression.append(c)
                 }
             }else if(SymbolTable.isColon(c)) {
-                if (expression.readingType() == ReadingType.STRING) {
-                    expression.append(c)
-                } else {
-                    // TODO:
+                expression.append(c)
+                if (expression.readingType() != ReadingType.STRING) {
+                    identifyToken(false)
                 }
+            }else if(SymbolTable.isHashtag(c)) {
+                if (expression.readingType() != ReadingType.STRING) {
+                    identifyToken(true)
+                }
+                expression.append(c)
             }else if(SymbolTable.isOperator(c)){
                 if(expression.readingType() == ReadingType.STRING
                     || expression.readingType() == ReadingType.OPERATOR){
                     expression.append(c)
                 }else{
-                    if(expression.alreadyReadSomething()) {
-                        identifyToken()
-                    }
-                    expression.startReadingAppending(currentLine, currentColumn, c)
+                    identifyToken(true)
+                    expression.append(c)
                     expression.setReadingType(ReadingType.OPERATOR)
                 }
             }else if(SymbolTable.isDigit(c)){
+                if(expression.readingType() == ReadingType.OPERATOR){
+                    identifyToken(true)
+                }
+                if(!expression.alreadyReadSomething()){
+                    expression.setReadingType(ReadingType.DIGIT)
+                }
                 expression.append(c)
-            }else if(SymbolTable.isLetter(c)){
+            }else if(SymbolTable.isLetter(c)
+                || SymbolTable.isUnderscore(c)
+                || SymbolTable.isCash(c)){
+                if(expression.readingType() == ReadingType.OPERATOR){
+                    identifyToken(true)
+                }
                 expression.append(c)
             }else if(SymbolTable.isBackslash(c)){
+                if(expression.readingType() == ReadingType.OPERATOR){
+                    identifyToken(true)
+                }
                 expression.append(c)
+            }else if(SymbolTable.isSpecial(c)){
+                if(expression.readingType() == ReadingType.STRING){
+                    expression.append(c)
+                }else{
+                    identifyToken(false)
+                }
             }else{
                 throw InvalidSymbolException(c, currentLine, currentColumn)
             }
@@ -121,14 +148,14 @@ class LexiconAnalyzer{
             if(expression.readingType() == ReadingType.STRING){
                 throw TextNotClosedException(expression.build(), expression.startLine(), expression.startColumn())
             }
-            identifyToken()
+            identifyToken(false)
         }
 
         return ArrayList(tokensAux)
     }
 
     @Throws(InvalidTokenException::class)
-    private fun identifyToken(){
+    private fun identifyToken(startNewExpression: Boolean){
         if(expression.alreadyReadSomething()) {
             val ex = expression.build()
             println("Expressão '${ex}'")
@@ -137,5 +164,8 @@ class LexiconAnalyzer{
             )
         }
         expression.reset()
+        if(startNewExpression){
+            expression.startReading(currentLine, currentColumn)
+        }
     }
 }
