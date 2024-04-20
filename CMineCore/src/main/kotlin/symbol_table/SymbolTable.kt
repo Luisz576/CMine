@@ -22,7 +22,7 @@ class SymbolTable {
             return c == '$'
         }
 
-        fun canStartADigit(c: Char): Boolean{ // TODO: vai reconhecer o -1 como dois tokens - e 1 ou um token de numero -1
+        fun canStartADigit(c: Char): Boolean{
             return c == '-'
         }
 

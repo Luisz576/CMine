@@ -115,10 +115,15 @@ class LexiconAnalyzer{
                 }
             }else if(SymbolTable.isDigit(c)){
                 if(expression.readingType() == ReadingType.OPERATOR){
-                    identifyToken(true)
-                }
-                if(!expression.alreadyReadSomething()){
-                    expression.setReadingType(ReadingType.DIGIT)
+                    if(expression.size() == 1 && SymbolTable.canStartADigit(expression.lastCharacter())){
+                        expression.setReadingType(ReadingType.DIGIT)
+                    }else{
+                        identifyToken(true)
+                    }
+                }else {
+                    if (!expression.alreadyReadSomething()) {
+                        expression.setReadingType(ReadingType.DIGIT)
+                    }
                 }
                 expression.append(c)
             }else if(SymbolTable.isLetter(c)

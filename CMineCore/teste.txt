@@ -1,5 +1,5 @@
 completed condicao = false;
-completed #FALSO=false;,,
+completed #FALSO=false;
 DELTA PATH
 check (velocity > 50 && !condicao || ola <= 44.3) {
     play{} crash(text e){}
@@ -12,8 +12,19 @@ quest $get1(){
 }
 
 quest $get_2(){
-    loot 2
+    loot -2
 }
+
+quest $compare(completed a, completed b){
+    loot a == b
+}
+-2.3
+
+--2
+
+i++
+
+a--
 
 task (coin i=0;i<5;i=i+1) {
     velocity=velocity*2;

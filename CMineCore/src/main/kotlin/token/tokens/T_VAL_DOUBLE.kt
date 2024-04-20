@@ -7,6 +7,9 @@ class T_VAL_DOUBLE(expression: String, line: Int, column: Int)
     companion object{
         private val regex = Regex("\\b(\\d+)\\.(\\d+)\\b")
         fun validate(expression: String): Boolean{
+            if(expression[0] == '-'){
+                return regex.matches(expression.substring(1, expression.length))
+            }
             return regex.matches(expression)
         }
     }
