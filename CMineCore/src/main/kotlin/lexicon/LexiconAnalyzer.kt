@@ -54,10 +54,12 @@ class LexiconAnalyzer{
             }
 
             if(SymbolTable.isBreakLine(c)){
+                # TODO: Quando String tem que dar a exception TextNotClosedException
                 identifyToken(false)
                 currentLine++
                 currentColumn = 0
             }else if(SymbolTable.isBreakCommand(c)){
+                # TODO: Quando String tem que ignorar
                 identifyToken(true)
                 expression.append(c)
                 identifyToken(false)
@@ -142,6 +144,7 @@ class LexiconAnalyzer{
                 if(expression.readingType() == ReadingType.STRING){
                     expression.append(c)
                 }else{
+                    // TODO: antes verificar se parece uma variavel e se for dar erro de variavel mal formatada?
                     identifyToken(false)
                     expression.append(c)
                 }
@@ -152,6 +155,7 @@ class LexiconAnalyzer{
 
         if(expression.alreadyReadSomething()){
             if(expression.readingType() == ReadingType.STRING){
+                // TODO: Mudar para fim de arquivo não experado EXCEPTION
                 throw TextNotClosedException(expression.build(), expression.startLine(), expression.startColumn())
             }
             identifyToken(false)
@@ -166,6 +170,9 @@ class LexiconAnalyzer{
             val ex = expression.build()
             println("Expressão '${ex}'")
             tokensAux.add(
+                // TODO: SE FOR PARECIDO COM UM NUMERO DAR ERRO DE NUMERO MAL FORMATADO
+                // TODO: PEGAR O TOKEN ANTES E SE FOR TIPO NUMERO VER SE NÃO ESTOUROU
+                // TODO: PEGAR O TOKEN ANTES E SE FOR VARIÁVEL VER SE NÃO É UM NOME MUITO GRANDE
                 TokenIdentifier.identify(ex, expression.startLine(), expression.startColumn())
             )
         }
