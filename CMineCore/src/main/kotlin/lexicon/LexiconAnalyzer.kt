@@ -71,9 +71,9 @@ class LexiconAnalyzer{
                 if(expression.readingType() == ReadingType.STRING){
                     if(SymbolTable.isBackslash(expression.lastCharacter())){
                         expression.append(c)
-                        identifyToken(false)
                     }else{
                         expression.append(c)
+                        identifyToken(false)
                     }
                 }else{
                     identifyToken(true)
@@ -143,6 +143,7 @@ class LexiconAnalyzer{
                     expression.append(c)
                 }else{
                     identifyToken(false)
+                    expression.append(c)
                 }
             }else{
                 throw InvalidSymbolException(c, currentLine, currentColumn)
