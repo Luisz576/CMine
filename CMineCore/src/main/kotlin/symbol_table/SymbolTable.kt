@@ -30,7 +30,7 @@ class SymbolTable {
             return c == '?' || c == '@' || c == '¨' || c in '~'..'»'
                     || c in 'Á'..'©' || c in '¢'..'¥' || c in 'ã'..'Ã'
                     || c in '¤'..'Ï' || c in 'Ó'..'´' || c == '±' ||
-                    c in '¾'..'÷' || c in '°'..'²'
+                    c in '¾'..'÷' || c in '°'..'²' || c == '\''
         }
         fun isHashtag(c: Char): Boolean{
             return c == '#'
@@ -46,6 +46,10 @@ class SymbolTable {
 
         fun isOperator(c: Char): Boolean{
             return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '=' || c == '!' || c == '|' || c == '&' || c == '<' || c == '>' || c == '%'
+        }
+
+        fun isCommentOperator(c: Char): Boolean{
+            return c == '/'
         }
 
         fun isColon(c: Char): Boolean{

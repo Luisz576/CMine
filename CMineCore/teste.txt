@@ -1,7 +1,7 @@
 
+"testestr\"ing"
 
-srs
-
+tela
 
 completed condicao = false;
 completed #FALSO=false;
@@ -12,16 +12,16 @@ check (velocity > 50 && !condicao || ola <= 44.3) {
 
 }
 
+coin a = 222222;
+
 quest $get1(){
     loot 1
 }
 
-"testestr\"ing"
-
 quest $get_2(){
     loot -2
 }
-@
+
 quest $compare(completed a, completed b){
     loot a == b
 }
@@ -42,3 +42,5 @@ SHOW_SCREEN();
     journey(enemiesToSpawn>0){
     !spawnEnemy();
 }
+
+//Teste de comentario nfjsbfgusgb8irg9er !@fw3//[\\]/

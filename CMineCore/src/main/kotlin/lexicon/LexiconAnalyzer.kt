@@ -5,10 +5,12 @@ import com.cmine.lexicon.expression.ExpressionBuilder
 import com.cmine.lexicon.expression.ReadingType
 import com.cmine.symbol_table.SymbolTable
 import com.cmine.symbol_table.exception.InvalidSymbolException
+import com.cmine.token.DigitToken
 import com.cmine.token.Token
-import com.cmine.token.exception.InvalidTokenException
+import com.cmine.token.exception.*
 import com.cmine.token.token_identifier.TokenIdentifier
-import token.exception.TextNotClosedException
+import com.cmine.token.tokens.T_ID_VAR
+import token.exception.UnexpectedEndOfFileException
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -20,7 +22,8 @@ class LexiconAnalyzer{
     private var currentLine = 1
     private var currentColumn = 0
 
-    @Throws(InvalidFileException::class, InvalidTokenException::class)
+    @Throws(InvalidFileException::class, InvalidTokenException::class, InvalidSymbolException::class,
+        BadlyFormattedStringException::class, UnexpectedEndOfFileException::class, NumberGreaterThanAllowedException::class)
     fun analyzeFromFile(filePath: String) : List<Token> {
         val file = File(filePath)
         if(!file.exists()){
@@ -36,7 +39,8 @@ class LexiconAnalyzer{
         }
     }
 
-    @Throws(InvalidTokenException::class, InvalidSymbolException::class)
+    @Throws(InvalidTokenException::class, InvalidSymbolException::class, BadlyFormattedStringException::class,
+        UnexpectedEndOfFileException::class, NumberGreaterThanAllowedException::class, BadlyFormattedNumberException::class)
     fun analyze(buffer: BufferedReader): List<Token> {
         tokensAux.clear()
         expression.reset()
@@ -54,23 +58,30 @@ class LexiconAnalyzer{
             }
 
             if(SymbolTable.isBreakLine(c)){
-                # TODO: Quando String tem que dar a exception TextNotClosedException
+                if(expression.readingType() == ReadingType.STRING){
+                    throw BadlyFormattedStringException(expression.build(), expression.startLine(), expression.startColumn())
+                }
                 identifyToken(false)
                 currentLine++
                 currentColumn = 0
             }else if(SymbolTable.isBreakCommand(c)){
-                # TODO: Quando String tem que ignorar
-                identifyToken(true)
-                expression.append(c)
-                identifyToken(false)
+                if (expression.readingType() == ReadingType.STRING || expression.readingType() == ReadingType.COMMENT) {
+                    expression.append(c)
+                }else{
+                    identifyToken(true)
+                    expression.append(c)
+                    identifyToken(false)
+                }
             }else if(SymbolTable.isWhitespaceOrTab(c)){
-                if (expression.readingType() == ReadingType.STRING) {
+                if (expression.readingType() == ReadingType.STRING || expression.readingType() == ReadingType.COMMENT) {
                     expression.append(c)
                 } else {
                     identifyToken(false)
                 }
             }else if(SymbolTable.isStringIdentifier(c)){
-                if(expression.readingType() == ReadingType.STRING){
+                if(expression.readingType() == ReadingType.COMMENT){
+                    expression.append(c)
+                }else if(expression.readingType() == ReadingType.STRING){
                     if(SymbolTable.isBackslash(expression.lastCharacter())){
                         expression.append(c)
                     }else{
@@ -84,7 +95,7 @@ class LexiconAnalyzer{
                 }
             }else if(SymbolTable.isBrackets(c)
                     || SymbolTable.isComma(c)){
-                if(expression.readingType() == ReadingType.STRING){
+                if(expression.readingType() == ReadingType.STRING || expression.readingType() == ReadingType.COMMENT){
                     expression.append(c)
                 }else{
                     identifyToken(true)
@@ -93,23 +104,32 @@ class LexiconAnalyzer{
                 }
             }else if(SymbolTable.isDot(c)) {
                 if (expression.readingType() == ReadingType.STRING
-                    || expression.readingType() == ReadingType.DIGIT) {
+                    || expression.readingType() == ReadingType.DIGIT
+                    || expression.readingType() == ReadingType.COMMENT) {
+                    expression.append(c)
+                }else{
+                    identifyToken(true)
                     expression.append(c)
                 }
             }else if(SymbolTable.isColon(c)) {
-                expression.append(c)
-                if (expression.readingType() != ReadingType.STRING) {
-                    identifyToken(false)
+                if (expression.readingType() != ReadingType.STRING && expression.readingType() != ReadingType.COMMENT) {
+                    identifyToken(true)
                 }
+                expression.append(c)
             }else if(SymbolTable.isHashtag(c)) {
-                if (expression.readingType() != ReadingType.STRING) {
+                if (expression.readingType() != ReadingType.STRING && expression.readingType() != ReadingType.COMMENT) {
                     identifyToken(true)
                 }
                 expression.append(c)
             }else if(SymbolTable.isOperator(c)){
                 if(expression.readingType() == ReadingType.STRING
-                    || expression.readingType() == ReadingType.OPERATOR){
+                    || expression.readingType() == ReadingType.COMMENT){
                     expression.append(c)
+                }else if(expression.readingType() == ReadingType.OPERATOR){
+                    expression.append(c)
+                    if(SymbolTable.isCommentOperator(c) && SymbolTable.isCommentOperator(expression.lastCharacter())){
+                        expression.setReadingType(ReadingType.COMMENT)
+                    }
                 }else{
                     identifyToken(true)
                     expression.append(c)
@@ -141,10 +161,9 @@ class LexiconAnalyzer{
                 }
                 expression.append(c)
             }else if(SymbolTable.isSpecial(c)){
-                if(expression.readingType() == ReadingType.STRING){
+                if(expression.readingType() == ReadingType.STRING || expression.readingType() == ReadingType.COMMENT){
                     expression.append(c)
                 }else{
-                    // TODO: antes verificar se parece uma variavel e se for dar erro de variavel mal formatada?
                     identifyToken(false)
                     expression.append(c)
                 }
@@ -155,8 +174,7 @@ class LexiconAnalyzer{
 
         if(expression.alreadyReadSomething()){
             if(expression.readingType() == ReadingType.STRING){
-                // TODO: Mudar para fim de arquivo não experado EXCEPTION
-                throw TextNotClosedException(expression.build(), expression.startLine(), expression.startColumn())
+                throw UnexpectedEndOfFileException(expression.build(), expression.startLine(), expression.startColumn())
             }
             identifyToken(false)
         }
@@ -164,17 +182,27 @@ class LexiconAnalyzer{
         return ArrayList(tokensAux)
     }
 
-    @Throws(InvalidTokenException::class)
+    @Throws(InvalidTokenException::class, NumberGreaterThanAllowedException::class, BadlyFormattedNumberException::class,
+        VariableNameExceedsAllowedLimitException::class, BadlyFormattedVariableNameException::class)
     private fun identifyToken(startNewExpression: Boolean){
         if(expression.alreadyReadSomething()) {
             val ex = expression.build()
-            println("Expressão '${ex}'")
-            tokensAux.add(
-                // TODO: SE FOR PARECIDO COM UM NUMERO DAR ERRO DE NUMERO MAL FORMATADO
-                // TODO: PEGAR O TOKEN ANTES E SE FOR TIPO NUMERO VER SE NÃO ESTOUROU
-                // TODO: PEGAR O TOKEN ANTES E SE FOR VARIÁVEL VER SE NÃO É UM NOME MUITO GRANDE
-                TokenIdentifier.identify(ex, expression.startLine(), expression.startColumn())
-            )
+            try{
+                val token = TokenIdentifier.identify(ex, expression.startLine(), expression.startColumn())
+                val tokenEx = token.expression()
+                println("> '${tokenEx}' (${token.tokenName()})")
+                if(token is DigitToken){
+                    token.digitValidation()
+                }else if(token is T_ID_VAR){
+                    token.validateName(expression.startLine(), expression.startColumn())
+                }
+                tokensAux.add(token)
+            }catch(e: InvalidTokenException){
+                if(expression.readingType() == ReadingType.DIGIT){
+                    throw BadlyFormattedNumberException(ex, expression.startLine(), expression.startColumn())
+                }
+                throw e
+            }
         }
         expression.reset()
         if(startNewExpression){

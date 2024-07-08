@@ -5,5 +5,6 @@ enum class ReadingType {
     SOMETHING,
     STRING,
     DIGIT,
-    OPERATOR
+    OPERATOR,
+    COMMENT
 }

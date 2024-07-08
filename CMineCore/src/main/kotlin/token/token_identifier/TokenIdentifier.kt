@@ -11,6 +11,8 @@ class TokenIdentifier {
             if(T_CODE_E.validate(expression)) return T_CODE_E(expression, line, column)
             else if(T_CODE_S.validate(expression)) return T_CODE_S(expression, line, column)
 
+            else if(T_COMMENT.validate(expression)) return T_COMMENT(expression, line, column)
+
             else if(T_END_C.validate(expression)) return T_END_C(expression, line, column)
 
             else if(T_COMMA.validate(expression)) return T_COMMA(expression, line, column)
@@ -45,6 +47,7 @@ class TokenIdentifier {
 
             else if(T_CV_TYPE.validate(expression)) return T_CV_TYPE(expression, line, column)
 
+            else if(T_VAL_STRING.validate(expression)) return T_VAL_STRING(expression, line, column)
             else if(T_VAL_BOOL.validate(expression)) return T_VAL_BOOL(expression, line, column)
             else if(T_VAL_INT.validate(expression)) return T_VAL_INT(expression, line, column)
             else if(T_VAL_DOUBLE.validate(expression)) return T_VAL_DOUBLE(expression, line, column)
