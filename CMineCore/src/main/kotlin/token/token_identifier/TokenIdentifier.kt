@@ -28,6 +28,7 @@ class TokenIdentifier {
 
             else if(T_OP_UN.validate(expression)) return T_OP_UN(expression, line, column)
             else if(T_OP_REL.validate(expression)) return T_OP_REL(expression, line, column)
+            else if(T_OP_NOT.validate(expression)) return T_OP_NOT(expression, line, column)
             else if(T_OP_ATR.validate(expression)) return T_OP_ATR(expression, line, column)
             else if(T_OP_LOG.validate(expression)) return T_OP_LOG(expression, line, column)
             else if(T_OP_MATH.validate(expression)) return T_OP_MATH(expression, line, column)

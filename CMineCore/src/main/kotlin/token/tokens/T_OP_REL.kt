@@ -3,7 +3,7 @@ package com.cmine.token.tokens
 import com.cmine.token.Token
 
 class T_OP_REL(expression: String, line: Int, column: Int)
-    : Token("T_OP_LOG", expression, line, column){
+    : Token("T_OP_REL", expression, line, column){
     companion object{
         enum class OP(val op: String){
             GREATER(">"),
@@ -11,7 +11,6 @@ class T_OP_REL(expression: String, line: Int, column: Int)
             LESS("<"),
             LESS_EQUAL("<="),
             EQUAL("=="),
-            INVERT("!"),
             DIFERENT("!="),
         }
 
