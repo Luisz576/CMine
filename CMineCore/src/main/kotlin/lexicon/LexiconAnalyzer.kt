@@ -164,8 +164,12 @@ class LexiconAnalyzer{
                 if(expression.readingType() == ReadingType.STRING || expression.readingType() == ReadingType.COMMENT){
                     expression.append(c)
                 }else{
-                    identifyToken(false)
-                    expression.append(c)
+                    if(expression.alreadyReadSomething()){
+                        identifyToken(false)
+                        expression.append(c)
+                    }else{
+                        throw InvalidTokenException(c.toString(), currentLine, currentColumn)
+                    }
                 }
             }else{
                 throw InvalidSymbolException(c, currentLine, currentColumn)

@@ -1,8 +1,6 @@
 
 "testestr\"ing"
 
-tela
-
 completed condicao = false;
 completed #FALSO=false;
 DELTA PATH
