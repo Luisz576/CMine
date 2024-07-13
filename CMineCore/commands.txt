@@ -1,0 +1,3 @@
+java -jar antlr-4.13.1-complete.jar -no-visitor -no-listener CMineLexer.g4
+
+java -jar antlr-4.13.1-complete.jar CMineLang.g4 -o "src/main/kotlin/lib/lang"

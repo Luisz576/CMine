@@ -17,7 +17,16 @@ class T_VAL_DOUBLE(expression: String, line: Int, column: Int)
 
     override fun digitValidation() {
         try{
-            expression().toDouble()
+            if(expression().contains('.')){
+                val parts = expression().split('.')
+                if(parts.size > 1){
+                    parts[0].toInt()
+                    parts[1].toInt()
+                    return
+                }
+                parts[0].toInt()
+            }
+            expression().toInt()
         }catch (e: Exception){
             throw NumberGreaterThanAllowedException(expression(), line(), column())
         }

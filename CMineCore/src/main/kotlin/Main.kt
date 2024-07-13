@@ -1,5 +1,7 @@
 package com.cmine
 
+import com.cmine.lib.CMineLibLexer
+import com.cmine.token.exception.InvalidTokenException
 import gui.CompiladorUI  // Importe a classe CompiladorUI
 import javax.swing.SwingUtilities
 
