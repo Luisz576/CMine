@@ -198,11 +198,11 @@ public class CompiladorUI extends JFrame {
         terminalArea.setText("");
 
         try {
-            // LexiconAnalyzer analyzer = new LexiconAnalyzer();
-            // java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
+            LexiconAnalyzer analyzer = new LexiconAnalyzer();
+            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
 
-            CMineLibLexer analyzer = new CMineLibLexer();
-            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(codigo);
+           //  CMineLibLexer analyzer = new CMineLibLexer();
+            // java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(codigo);
 
             for (com.cmine.token.Token token : tokens) {
                 terminalArea.append(String.format("Token:<%s,'%s'> Linha: %d - Coluna %d%n", token.tokenName(), token.expression(), token.line(), token.column()));

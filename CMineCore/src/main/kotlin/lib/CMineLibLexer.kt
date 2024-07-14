@@ -55,8 +55,7 @@ class CMineLibLexer {
 
         var token = lexer.nextToken()
         while (token.type !== CMineLang.EOF && !errorListener.hasSomeError()) {
-            println(token.text + " (" + CMineLang.tokenNames[token.type] + ")")
-            tokens.add(identify(token.text, token.line, token.startIndex + 1))
+            tokens.add(identify(token.text, token.line, token.charPositionInLine+1))
             token = lexer.nextToken()
         }
         if(errorListener.hasSomeError()){
