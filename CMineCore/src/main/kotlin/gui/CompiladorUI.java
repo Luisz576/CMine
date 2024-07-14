@@ -2,6 +2,7 @@ package gui;
 
 import com.cmine.lexicon.LexiconAnalyzer;
 import com.cmine.lib.CMineLibLexer;
+import com.cmine.symbol_table.exception.InvalidSymbolException;
 import com.cmine.token.exception.LexiconException;
 
 import javax.swing.*;
@@ -209,7 +210,8 @@ public class CompiladorUI extends JFrame {
 
         } catch (LexiconException e) {
             LexiconException le = (LexiconException)e;
-            terminalArea.append(String.format("Erro Léxico: '%s' - Linha: %d - Coluna: %d%n", le.getExpression(), le.getLine(), le.getColumn()));
+
+            terminalArea.append(String.format("Erro Léxico (%s): '%s' - Linha: %d - Coluna: %d%n", le.getLexiconExceptionName(), le.getExpression(), le.getLine(), le.getColumn()));
 
 //            if (e instanceof com.cmine.token.exception.InvalidTokenException) {
 //                com.cmine.token.exception.InvalidTokenException ite = (com.cmine.token.exception.InvalidTokenException) e;
