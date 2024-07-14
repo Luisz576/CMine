@@ -2,6 +2,7 @@ package gui;
 
 import com.cmine.lexicon.LexiconAnalyzer;
 import com.cmine.lib.CMineLibLexer;
+import com.cmine.token.exception.LexiconException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -196,22 +197,24 @@ public class CompiladorUI extends JFrame {
         terminalArea.setText("");
 
         try {
-            // LexiconAnalyzer analyzer = new LexiconAnalyzer();
-            // java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
+            LexiconAnalyzer analyzer = new LexiconAnalyzer();
+            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
 
-            CMineLibLexer analyzer = new CMineLibLexer();
-            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(codigo);
+//            CMineLibLexer analyzer = new CMineLibLexer();
+//            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(codigo);
 
             for (com.cmine.token.Token token : tokens) {
-                terminalArea.append(String.format("'%s' (%s)%n", token.expression(), token.tokenName()));
+                terminalArea.append(String.format("Token:<%s,'%s'> Linha: %d - Coluna %d%n", token.tokenName(), token.expression(), token.line(), token.column()));
             }
 
-        } catch (Exception e) {
-            terminalArea.append("Erro: " + e.getMessage() + "\n");
-            if (e instanceof com.cmine.token.exception.InvalidTokenException) {
-                com.cmine.token.exception.InvalidTokenException ite = (com.cmine.token.exception.InvalidTokenException) e;
-                terminalArea.append("Expressão inválida: '" + ite.getExpression() + "'\n");
-            }
+        } catch (LexiconException e) {
+            LexiconException le = (LexiconException)e;
+            terminalArea.append(String.format("Erro Léxico: '%s' - Linha: %d - Coluna: %d%n", le.getExpression(), le.getLine(), le.getColumn()));
+
+//            if (e instanceof com.cmine.token.exception.InvalidTokenException) {
+//                com.cmine.token.exception.InvalidTokenException ite = (com.cmine.token.exception.InvalidTokenException) e;
+//                terminalArea.append("Expressão inválida: '" + ite.getExpression() + "'\n");
+//            }
         }
     }
 

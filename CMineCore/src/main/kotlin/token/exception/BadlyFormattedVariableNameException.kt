@@ -1,3 +1,3 @@
 package com.cmine.token.exception
 
-class BadlyFormattedVariableNameException(val expression: String, val line: Int, val column: Int) : Exception()
+class BadlyFormattedVariableNameException(expression: String, line: Int, column: Int) : LexiconException(expression, line, column)

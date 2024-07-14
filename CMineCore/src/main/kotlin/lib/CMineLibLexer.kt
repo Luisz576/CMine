@@ -7,6 +7,7 @@ import com.cmine.token.DigitToken
 import com.cmine.token.Token
 import com.cmine.token.exception.BadlyFormattedNumberException
 import com.cmine.token.exception.InvalidTokenException
+import com.cmine.token.exception.LexiconException
 import com.cmine.token.token_identifier.TokenIdentifier
 import com.cmine.token.tokens.T_ID_VAR
 import lib.lang.CMineLang
@@ -15,6 +16,7 @@ import java.io.BufferedReader
 import java.io.FileReader
 
 class CMineLibLexer {
+    @Throws(LexiconException::class)
     fun analyzeFromFile(filename: String): List<Token>{
         val bf = BufferedReader(FileReader(filename))
         val content = StringBuilder()
@@ -31,6 +33,7 @@ class CMineLibLexer {
         return analyze(content.toString())
     }
 
+    @Throws(LexiconException::class)
     fun analyze(buffer: BufferedReader): List<Token>{
         var cI: Int
         val builder = StringBuilder()
@@ -39,6 +42,7 @@ class CMineLibLexer {
         }
         return analyze(builder.toString())
     }
+    @Throws(LexiconException::class)
     fun analyze(content: String): List<Token>{
         val inStrem = CharStreams.fromString(content)
 
@@ -52,7 +56,7 @@ class CMineLibLexer {
         var token = lexer.nextToken()
         while (token.type !== CMineLang.EOF && !errorListener.hasSomeError()) {
             println(token.text + " (" + CMineLang.tokenNames[token.type] + ")")
-            tokens.add(identify(token.text, token.line, token.startIndex))
+            tokens.add(identify(token.text, token.line, token.startIndex + 1))
             token = lexer.nextToken()
         }
         if(errorListener.hasSomeError()){
@@ -62,6 +66,7 @@ class CMineLibLexer {
         return tokens
     }
 
+    @Throws(LexiconException::class)
     fun identify(ex: String, startLine: Int, startColumn: Int): Token{
         try{
             val token = TokenIdentifier.identify(ex, startLine, startColumn)

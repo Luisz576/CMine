@@ -22,8 +22,7 @@ class LexiconAnalyzer{
     private var currentLine = 1
     private var currentColumn = 0
 
-    @Throws(InvalidFileException::class, InvalidTokenException::class, InvalidSymbolException::class,
-        BadlyFormattedStringException::class, UnexpectedEndOfFileException::class, NumberGreaterThanAllowedException::class)
+    @Throws(LexiconException::class)
     fun analyzeFromFile(filePath: String) : List<Token> {
         val file = File(filePath)
         if(!file.exists()){
@@ -39,8 +38,7 @@ class LexiconAnalyzer{
         }
     }
 
-    @Throws(InvalidTokenException::class, InvalidSymbolException::class, BadlyFormattedStringException::class,
-        UnexpectedEndOfFileException::class, NumberGreaterThanAllowedException::class, BadlyFormattedNumberException::class)
+    @Throws(LexiconException::class)
     fun analyze(buffer: BufferedReader): List<Token> {
         tokensAux.clear()
         expression.reset()
@@ -164,8 +162,12 @@ class LexiconAnalyzer{
                 if(expression.readingType() == ReadingType.STRING || expression.readingType() == ReadingType.COMMENT){
                     expression.append(c)
                 }else{
-                    identifyToken(false)
-                    expression.append(c)
+                    if(expression.alreadyReadSomething()){
+                        identifyToken(false)
+                        expression.append(c)
+                    }else{
+                        throw InvalidTokenException(c.toString(), currentLine, currentColumn)
+                    }
                 }
             }else{
                 throw InvalidSymbolException(c, currentLine, currentColumn)
@@ -182,8 +184,7 @@ class LexiconAnalyzer{
         return ArrayList(tokensAux)
     }
 
-    @Throws(InvalidTokenException::class, NumberGreaterThanAllowedException::class, BadlyFormattedNumberException::class,
-        VariableNameExceedsAllowedLimitException::class, BadlyFormattedVariableNameException::class)
+    @Throws(LexiconException::class)
     private fun identifyToken(startNewExpression: Boolean){
         if(expression.alreadyReadSomething()) {
             val ex = expression.build()
