@@ -1,46 +1,9 @@
-
-"testestr\"ing"
-
-tela
-
-completed condicao = false;
-completed #FALSO=false;
-DELTA PATH
-check (velocity > 50 && !condicao || ola <= 44.3) {
-    play{} crash(text e){}
-}Checked{
-
-}
-
-coin a = 222222;
-
-quest $get1(){
-    loot 1
-}
-
-quest $get_2(){
-    loot -2
-}
-
-quest $compare(completed a, completed b){
-    loot a == b
-}
--2.3
-
---2
-
-i++
-
-a--
-
-task (coin i=0;i<5;i=i+1) {
-    velocity=velocity*2;
-}
-%
+IFSULDEMINAS
 
 SHOW_SCREEN();
-    journey(enemiesToSpawn>0){
-    !spawnEnemy();
+journey(enemiesToSpawn > 0){
+    $spawnEnemy();
+    enemiesToSpawn --;
 }
 
-//Teste de comentario nfjsbfgusgb8irg9er !@fw3//[\\]/
+MUZ

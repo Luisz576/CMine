@@ -31,6 +31,14 @@ class CMineLibLexer {
         return analyze(content.toString())
     }
 
+    fun analyze(buffer: BufferedReader): List<Token>{
+        var cI: Int
+        val builder = StringBuilder()
+        while ((buffer.read().also { cI = it }) != -1) {
+            builder.append(cI.toChar())
+        }
+        return analyze(builder.toString())
+    }
     fun analyze(content: String): List<Token>{
         val inStrem = CharStreams.fromString(content)
 

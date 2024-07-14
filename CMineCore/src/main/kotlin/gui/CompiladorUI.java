@@ -1,6 +1,7 @@
 package gui;
 
 import com.cmine.lexicon.LexiconAnalyzer;
+import com.cmine.lib.CMineLibLexer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -195,8 +196,11 @@ public class CompiladorUI extends JFrame {
         terminalArea.setText("");
 
         try {
-            LexiconAnalyzer analyzer = new LexiconAnalyzer();
-            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
+            // LexiconAnalyzer analyzer = new LexiconAnalyzer();
+            // java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
+
+            CMineLibLexer analyzer = new CMineLibLexer();
+            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(codigo);
 
             for (com.cmine.token.Token token : tokens) {
                 terminalArea.append(String.format("'%s' (%s)%n", token.expression(), token.tokenName()));
