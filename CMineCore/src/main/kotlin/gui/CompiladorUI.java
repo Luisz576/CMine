@@ -123,7 +123,7 @@ public class CompiladorUI extends JFrame {
         toolBar.add(Box.createHorizontalGlue());
 
         JButton compileButton = createStyledButton("Executar", "start.png", new Color(48, 105, 194));
-        compileButton.addActionListener(e -> compilar());
+        compileButton.addActionListener(e -> compile());
         toolBar.add(compileButton);
 
         toolBar.addSeparator(new Dimension(5, 0));
@@ -190,46 +190,7 @@ public class CompiladorUI extends JFrame {
         return button;
     }
 
-    private JButton createCompileButton() {
-        JButton compileButton = new JButton("Compilar") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                if (getModel().isPressed()) {
-                    g2.setColor(new Color(0, 122, 255));
-                } else if (getModel().isRollover()) {
-                    g2.setColor(new Color(0, 122, 255, 220));
-                } else {
-                    g2.setColor(new Color(0, 122, 255, 180));
-                }
-
-                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8);
-
-                g2.setColor(Color.WHITE);
-                g2.setFont(getFont());
-                FontMetrics fm = g2.getFontMetrics();
-                int x = (getWidth() - fm.stringWidth(getText())) / 2;
-                int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-                g2.drawString(getText(), x, y);
-                g2.dispose();
-            }
-        };
-
-        compileButton.setPreferredSize(new Dimension(90, 40));
-        compileButton.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        compileButton.setForeground(Color.WHITE);
-        compileButton.setBorderPainted(false);
-        compileButton.setContentAreaFilled(false);
-        compileButton.setFocusPainted(false);
-        compileButton.setOpaque(false);
-        compileButton.addActionListener(e -> compilar());
-
-        return compileButton;
-    }
-
-    private void compilar() {
+    private void compile() {
         String codigo = editorArea.getText();
         terminalArea.setText("");
 
