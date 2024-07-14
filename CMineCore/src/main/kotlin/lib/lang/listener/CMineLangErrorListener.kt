@@ -40,13 +40,13 @@ class CMineLangErrorListener : ANTLRErrorListener {
                 }else if(a != 0){
                     expression += p4[i]
                     if(a == 1 && SymbolTable.isStringIdentifier(p4[i])){
-                        someError = BadlyFormattedStringException(p4, p2, p3)
+                        someError = BadlyFormattedStringException(p4, p2, p3+1)
                         break
                     }
                     a = 2
                 }
             }
-            throw InvalidTokenException(expression, p2, p3)
+            throw InvalidTokenException(expression, p2, p3+1)
         }
     }
 
