@@ -8,11 +8,13 @@ import javax.swing.SwingUtilities
 object CMine {
     @JvmStatic
     fun main(args: Array<String>) {
-        println("CMine")
-
-        // Inicia a GUI
-        SwingUtilities.invokeLater {
-            CompiladorUI().isVisible = true
-        }
+//        println("CMine")
+//
+//        // Inicia a GUI
+//        SwingUtilities.invokeLater {
+//            CompiladorUI().isVisible = true
+//        }
+        val lib = CMineLibLexer()
+        println(lib.analyze("3 && 5;".trimIndent()))
     }
 }
