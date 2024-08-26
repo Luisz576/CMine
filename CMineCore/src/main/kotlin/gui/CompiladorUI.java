@@ -208,9 +208,15 @@ public class CompiladorUI extends JFrame {
     private void compile() throws LexiconException, SyntaxException {
         String codigo = editorArea.getText();
         terminalArea.setText("");
+        try {
+            CMineLib lib = new CMineLib();
+            terminalArea.setText(String.valueOf(lib.analyze(codigo)));
 
-        CMineLib lib = new CMineLib();
-        terminalArea.setText(String.valueOf(lib.analyze(codigo)));
+        } catch (LexiconException e) {
+            LexiconException le = (LexiconException)e;
+
+            terminalArea.append(String.format("Erro Léxico (%s): '%s' - Linha: %d - Coluna: %d%n", le.getLexiconExceptionName(), le.getExpression(), le.getLine(), le.getColumn()));
+        }
     }
 
     private void newFile() {
