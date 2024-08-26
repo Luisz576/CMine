@@ -1,4 +1,4 @@
-package com.cmine.lang.listener
+package com.cmine.lib
 
 import com.cmine.symbol_table.SymbolTable
 import com.cmine.token.exception.BadlyFormattedStringException

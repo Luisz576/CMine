@@ -17,7 +17,7 @@ object CMine {
         val lib = CMineLib()
 
         val sifrao = "$"
-        println(lib.analyze("""
+        val tree = lib.analyze("""
             IFSULDEMINAS
 
             journey(enemiesToSpawn > 0){
@@ -41,7 +41,10 @@ object CMine {
                 velocity = velocity * 2;
             }
             
+            ${sifrao}func(20);
+            
             MUZ
-            """.trimIndent()))
+            """.trimIndent())
+        println(tree.prog())
     }
 }
