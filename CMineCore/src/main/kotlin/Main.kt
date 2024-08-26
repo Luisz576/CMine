@@ -1,6 +1,6 @@
 package com.cmine
 
-import com.cmine.lib.CMineLibLexer
+import com.cmine.lib.CMineLib
 import com.cmine.token.exception.InvalidTokenException
 import gui.CompiladorUI  // Importe a classe CompiladorUI
 import javax.swing.SwingUtilities
@@ -14,10 +14,33 @@ object CMine {
 //        SwingUtilities.invokeLater {
 //            CompiladorUI().isVisible = true
 //        }
-        val lib = CMineLibLexer()
+        val lib = CMineLib()
+
+        val sifrao = "$"
         println(lib.analyze("""
             IFSULDEMINAS
-            2 > 3
+
+            journey(enemiesToSpawn > 0){
+                ${sifrao}spawnEnemy();
+                enemiesToSpawn --;
+                ++enemiesToSpawn;
+            }
+            
+            quest ${sifrao}func(coin a){
+                check (velocity > 50) {
+                    loot a + 2;
+                }
+            	loot;
+            }
+            
+            task (i = i + 1; i < 5;) {
+                velocity = velocity * 2;
+            }
+            coin i = 10;
+            task (coin i = 10; i < 5; i = i + 1) {
+                velocity = velocity * 2;
+            }
+            
             MUZ
             """.trimIndent()))
     }

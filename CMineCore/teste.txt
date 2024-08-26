@@ -4,6 +4,16 @@ SHOW_SCREEN();
 journey(enemiesToSpawn > 0){
     $spawnEnemy();
     enemiesToSpawn --;
+    ++enemiesToSpawn;
+}
+
+coin a = 20;
+
+quest $func(coin a){
+    check (velocity > 50) {
+        loot a + 2;
+    }
+    loot;
 }
 
 MUZ
