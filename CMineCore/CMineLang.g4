@@ -27,7 +27,6 @@ T_COND_IF: 'check' ;
 
 T_COND_ELSE: 'checked' ;
 
-T_REP_FOR: 'task' ;
 
 T_REP_WHILE: 'journey' ;
 
@@ -112,3 +111,5 @@ NEW_LINE: [\r\n]+ -> skip ;
 SPACES: [ \t] -> skip ;
 
 T_COMMENT: '//' ~ [\r\n]* -> skip ;
+
+T_REP_FOR: 'task' ;

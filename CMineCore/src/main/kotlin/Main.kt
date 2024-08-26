@@ -15,6 +15,10 @@ object CMine {
 //            CompiladorUI().isVisible = true
 //        }
         val lib = CMineLibLexer()
-        println(lib.analyze("3 && 5;".trimIndent()))
+        println(lib.analyze("""
+            IFSULDEMINAS
+            2 > 3
+            MUZ
+            """.trimIndent()))
     }
 }

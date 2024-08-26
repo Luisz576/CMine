@@ -56,7 +56,7 @@ class CMineLibLexer {
         val tokens = ArrayList<Token>()
 
         //var token = lexer.nextToken()
-        //while (token.type != TesteLangParser.EOF){ //&& !errorListener.hasSomeError()) {
+        //while (token.type != TesteLangParser.g4.EOF){ //&& !errorListener.hasSomeError()) {
         //    tokens.add(identify(token.text, token.line, token.charPositionInLine+1))
         //    token = lexer.nextToken()
         //}

@@ -1,13 +1,46 @@
 grammar TesteLang;
 
 /// EXPRESSIONS ///
-//program: T_CODE_S prog T_CODE_E ;
-
-program: T_VAL_INT T_OP_LOG T_VAL_INT T_END_C ;
+program: T_CODE_S prog T_CODE_E ;
 
 prog: (expr)* ;
 
-expr: T_VAL_INT T_OP_LOG T_VAL_INT T_END_C ;
+// EXPRESSÕES MÍNIMAS (ou seja, se não estar aqui, não pode ter comparação solta sem ';' por exemplo)
+expr: (exp_func_called T_END_C)
+    | (exp_assign T_END_C) ;
+
+exp_func_called: (T_ID_FUNC T_PAR_OPEN T_PAR_CLOSE)
+                    | (T_SYS_FUNC T_PAR_OPEN T_PAR_CLOSE) ;
+
+exp_stored_value: T_ID_VAR | T_ID_CONST ;
+
+exp_number: T_VAL_INT | T_VAL_DOUBLE ;
+
+exp_arith_paren: T_PAR_OPEN exp_arith T_PAR_CLOSE ;
+
+exp_arith: exp_arith_paren
+           | (exp_arith_paren T_OP_MATH exp_arith_paren)
+           | (exp_number T_OP_MATH exp_number)
+           | (exp_stored_value T_OP_MATH exp_number) ;
+
+exp_boolean: T_VAL_BOOL
+             | (exp_comparable T_OP_REL exp_comparable)
+             // | (exp_boolean T_OP_LOG exp_boolean)
+             | (T_OP_NOT exp_boolean) ;
+
+exp_comparable: exp_stored_value
+                | T_VAL_BOOL
+                | T_SYS_VAR
+                | exp_number
+                | exp_stored_value
+                | (T_PAR_OPEN  exp_arith T_PAR_CLOSE)
+                | (T_PAR_OPEN exp_boolean T_PAR_CLOSE) ;
+
+exp_value: exp_stored_value
+            | exp_boolean
+            | exp_arith ;
+
+exp_assign: ( exp_stored_value T_OP_ATR exp_value ) ;
 
 /// TOKENS ///
 T_CODE_S: 'IFSULDEMINAS' ;
