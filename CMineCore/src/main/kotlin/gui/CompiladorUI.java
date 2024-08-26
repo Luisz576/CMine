@@ -1,8 +1,10 @@
 package gui;
 
+import com.cmine.lib.CMineLib;
 import com.cmine.lexicon.LexiconAnalyzer;
 import com.cmine.lib.CMineLibLexer;
 import com.cmine.symbol_table.exception.InvalidSymbolException;
+import com.cmine.syntaix.SyntaxException;
 import com.cmine.token.exception.LexiconException;
 
 import javax.swing.*;
@@ -10,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.*;
 import java.util.Objects;
+
+import static java.sql.DriverManager.println;
 
 public class CompiladorUI extends JFrame {
     private final JTextArea editorArea;
@@ -125,8 +129,16 @@ public class CompiladorUI extends JFrame {
 
         toolBar.add(Box.createHorizontalGlue());
 
-        JButton compileButton = createStyledButton("Executar", "start.png", new Color(48, 105, 194));
-        compileButton.addActionListener(e -> compile());
+        JButton compileButton = createStyledButton("Compilar", "start.png", new Color(48, 105, 194));
+        compileButton.addActionListener(e -> {
+            try {
+                compile();
+            } catch (LexiconException ex) {
+                throw new RuntimeException(ex);
+            } catch (SyntaxException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         toolBar.add(compileButton);
 
         toolBar.addSeparator(new Dimension(5, 0));
@@ -193,31 +205,12 @@ public class CompiladorUI extends JFrame {
         return button;
     }
 
-    private void compile() {
+    private void compile() throws LexiconException, SyntaxException {
         String codigo = editorArea.getText();
         terminalArea.setText("");
 
-        try {
-            LexiconAnalyzer analyzer = new LexiconAnalyzer();
-            java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(new java.io.BufferedReader(new java.io.StringReader(codigo)));
-
-           //  CMineLibLexer analyzer = new CMineLibLexer();
-            // java.util.List<com.cmine.token.Token> tokens = analyzer.analyze(codigo);
-
-            for (com.cmine.token.Token token : tokens) {
-                terminalArea.append(String.format("Token:<%s,'%s'> Linha: %d - Coluna %d%n", token.tokenName(), token.expression(), token.line(), token.column()));
-            }
-
-        } catch (LexiconException e) {
-            LexiconException le = (LexiconException)e;
-
-            terminalArea.append(String.format("Erro Léxico (%s): '%s' - Linha: %d - Coluna: %d%n", le.getLexiconExceptionName(), le.getExpression(), le.getLine(), le.getColumn()));
-
-//            if (e instanceof com.cmine.token.exception.InvalidTokenException) {
-//                com.cmine.token.exception.InvalidTokenException ite = (com.cmine.token.exception.InvalidTokenException) e;
-//                terminalArea.append("Expressão inválida: '" + ite.getExpression() + "'\n");
-//            }
-        }
+        CMineLib lib = new CMineLib();
+        terminalArea.setText(String.valueOf(lib.analyze(codigo)));
     }
 
     private void newFile() {
