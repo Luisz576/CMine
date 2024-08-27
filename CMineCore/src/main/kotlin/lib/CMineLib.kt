@@ -64,7 +64,7 @@ class CMineLib {
 
         // just to print
         val tokensString = StringBuilder()
-        tokens.forEach { tokensString.append(it.tokenName() + " - " + it.expression() + "\n"); }
+        tokens.forEach { tokensString.append(it.tokenName() + " - " + it.expression() + " = l:" + it.line() + " - c:" + it.column() + "\n"); }
 
         return if (errorListener.errors.isNotEmpty()) {
             errorListener.errors.joinToString("\n")
