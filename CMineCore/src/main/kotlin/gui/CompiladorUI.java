@@ -130,7 +130,7 @@ public class CompiladorUI extends JFrame {
         toolBar.addSeparator(new Dimension(5, 0));
 
         // Botão "Listar Tokens"
-        JButton listTokensButton = createStyledButton("Tokens", "tokens.png", new Color(126, 126, 126));
+        JButton listTokensButton = createStyledButton("Manual", "tokens.png", new Color(126, 126, 126));
         listTokensButton.addActionListener(e -> listTokens());  // Chama a função listTokens quando clicado
         toolBar.add(listTokensButton);
 
@@ -183,7 +183,7 @@ public class CompiladorUI extends JFrame {
                 .append("</pre>")
                 .append("</div><br>");
 
-        tokens.append("<h2 style='color:#2c3e50;'>📜 Tokens Disponíveis</h2><br>");
+        tokens.append("<h2 style='color:#2c3e50;'>📜 Tokens e Expressões Disponíveis</h2><br>");
         tokens.append("<h3 style='color:#2980b9;'>🛠️ <b>Códigos e Tipos:</b></h3>")
                 .append("<ul>")
                 .append("<li><b>T_CODE_S</b>: <span style='color:#27ae60;'>IFSULDEMINAS</span></li>")
@@ -259,7 +259,7 @@ public class CompiladorUI extends JFrame {
     // Classe interna para exibir tokens
     private class TokenListFrame extends JFrame {
         public TokenListFrame(String tokens) {
-            setTitle("Tokens Disponíveis");
+            setTitle("Manual");
             setSize(800, 800);
             setLocationRelativeTo(null);  // Centraliza a janela na tela
 
