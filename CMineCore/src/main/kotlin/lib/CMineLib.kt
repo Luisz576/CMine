@@ -62,10 +62,14 @@ class CMineLib {
 
         parser.program()
 
+        // just to print
+        val tokensString = StringBuilder()
+        tokens.forEach { tokensString.append(it.tokenName() + " - " + it.expression() + "\n"); }
+
         return if (errorListener.errors.isNotEmpty()) {
             errorListener.errors.joinToString("\n")
         } else {
-            "Compilado com sucesso!"
+            "${tokensString}\nCompilado com sucesso!"
         }
     }
 
